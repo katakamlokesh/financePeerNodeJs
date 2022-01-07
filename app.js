@@ -8,10 +8,11 @@ const cors = require("cors");
 
 const app = express();
 
-app.use(express.json());
-app.use(cors());
-
 const dbPath = path.join(__dirname, "cricketTeam.db");
+
+app.use(express.json());
+
+app.use(cors());
 
 let db = null;
 
@@ -115,7 +116,7 @@ app.post("/login", async (request, response) => {
     if (isPasswordMatched === true) {
       const payload = { username: username };
       const jwtToken = jwt.sign(payload, "nsdfpladsnlbsd");
-      response.send({ jwtToken });
+      response.send({ jwt_token: jwtToken });
     } else {
       response.status(400);
       response.send("Invalid password");
