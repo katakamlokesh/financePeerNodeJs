@@ -1,0 +1,32 @@
+
+POST http://localhost:3004/register
+Content-Type: application/json
+
+{
+    "username": "lokesh",
+    "name": "lokesh katakam",
+    "password": "lokesh2022",
+    "gender": "male",
+    "location": "khammam"
+}
+
+###
+
+POST http://localhost:3004/login
+Content-Type: application/json
+
+{
+    "username": "lokesh",
+    "password": "lokesh2022"
+}
+
+###
+
+POST http://localhost:3004/data 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxva2VzaCIsImlhdCI6MTY0MTU1MDM1Nn0.RZW-vXDtZZC4G7bAPCi1TfBHO5njpzWkaaLhrNkOK0s 
+
+
+###
+GET http://localhost:3004/posts
+
+###
