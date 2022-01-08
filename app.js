@@ -127,25 +127,31 @@ app.post("/login", async (request, response) => {
 //Insert data into data table
 
 app.post("/data", authenticateToken, async (request, response) => {
-  const dataDetails = request.body;
-  const values = dataDetails.map(
-    (eachDataId) =>
-      `('${eachDataId.userId}', ${eachDataId.id}, ${eachDataId.title},${eachDataId.body})`
-  );
+  try {
+    const dataDetails = request.body;
 
-  const valuesString = values.join(",");
+    const values = dataDetails.map(
+      (eachDataId) =>
+        `(${eachDataId.user_id}, ${eachDataId.id}, '${eachDataId.title}','${eachDataId.body}')`
+    );
 
-  const addDataQuery = `
+    const valuesString = values.join(",");
+
+    const addDataQuery = `
     INSERT INTO
       data (user_id,id,title,body)
     VALUES
        ${valuesString};`;
 
-  const dbResponse = await db.run(addDataQuery);
-  response.send("uploaded successfully");
+    const dbResponse = await db.run(addDataQuery);
+    response.send("Uploaded successfully");
+  } catch (e) {
+    console.log(`DB Error: ${e.message}`);
+    response.send("Uploading Failed");
+  }
 });
 
-const convertDataObjectToResponseObject = (dataDetails) => {
+const convertDataDetailsToResponseDetails = (dataDetails) => {
   return dataDetails.map((each) => ({
     userId: each.user_id,
     id: each.id,
@@ -156,11 +162,23 @@ const convertDataObjectToResponseObject = (dataDetails) => {
 
 app.get("/posts", async (request, response) => {
   const selectQuery = `SELECT * FROM data;`;
-  const dataDetails = await db.get(selectQuery);
-  if (dataDetails !== undefined) {
+  const dataDetails = await db.all(selectQuery);
+
+  if (dataDetails.length >= 1) {
     response.send(convertDataDetailsToResponseDetails(dataDetails));
   } else {
     response.send("No Posts are Posted Yet!");
+  }
+});
+
+app.delete("/data", async (request, response) => {
+  try {
+    const deleteQuery = `DELETE FROM data;`;
+    const deleteResponse = await db.run(deleteQuery);
+    response.send("Deleted");
+  } catch (e) {
+    console.log(`DB Error: ${e.message}`);
+    response.send("Delete Failed");
   }
 });
 
