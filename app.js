@@ -163,12 +163,8 @@ const convertDataDetailsToResponseDetails = (dataDetails) => {
 app.get("/posts", async (request, response) => {
   const selectQuery = `SELECT * FROM data;`;
   const dataDetails = await db.all(selectQuery);
-
-  if (dataDetails.length >= 1) {
-    response.send(convertDataDetailsToResponseDetails(dataDetails));
-  } else {
-    response.send("No Posts are Posted Yet!");
-  }
+  console.log(dataDetails);
+  response.send(convertDataDetailsToResponseDetails(dataDetails));
 });
 
 app.delete("/data", async (request, response) => {
